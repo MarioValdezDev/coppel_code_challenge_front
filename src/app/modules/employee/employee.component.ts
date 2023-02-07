@@ -2,9 +2,8 @@ import { Component, OnInit } from '@angular/core';
 import { Employee } from 'src/app/core/models/employee';
 import { EmployeeService } from 'src/app/core/services/employee/employee.service';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
-import { FormBuilder, FormControl, FormGroup } from '@angular/forms';
 import { v4 as uuidv4 } from 'uuid';
-import { HttpErrorResponse} from '@angular/common/http'
+import { HttpErrorResponse } from '@angular/common/http'
 @Component({
   selector: 'app-employee',
   templateUrl: './employee.component.html',
@@ -26,7 +25,7 @@ export class EmployeeComponent implements OnInit {
   error: boolean = false
   message: string = ""
 
-  constructor(private service: EmployeeService, private modal: NgbModal, private formBuilder: FormBuilder) {
+  constructor(private service: EmployeeService, private modal: NgbModal) {
 
   }
 
@@ -52,10 +51,10 @@ export class EmployeeComponent implements OnInit {
     this.employee.name = this.name
     this.employee.lastName = this.lastName
     this.employee.occupation = this.occupation
-
+    console.log(this.employee)
     this.service.saveEmployee(this.employee).subscribe((res) => {
       this.showSuccess();
-    },(error:HttpErrorResponse)=>{
+    }, (error: HttpErrorResponse) => {
       console.log(error)
       this.error = true;
       this.success = false;
@@ -64,13 +63,11 @@ export class EmployeeComponent implements OnInit {
   }
 
   showSuccess() {
-
     setTimeout(() => {
       this.success = false
       this.modal.dismissAll();
       this.getEmployees()
     }, 2000)
-
   }
 
 }
