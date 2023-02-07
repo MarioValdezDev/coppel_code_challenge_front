@@ -9,13 +9,15 @@ import { EmployeeComponent } from './modules/employee/employee.component';
 import { HttpClientModule } from '@angular/common/http';
 import { FormsModule } from '@angular/forms';
 import { InventoryComponent } from './modules/inventory/inventory.component';
+import { PolicyComponent } from './modules/policy/policy.component';
 
 @NgModule({
   declarations: [
     AppComponent,
     HomeComponent,
     EmployeeComponent,
-    InventoryComponent
+    InventoryComponent,
+    PolicyComponent
   ],
   imports: [
     BrowserModule,
