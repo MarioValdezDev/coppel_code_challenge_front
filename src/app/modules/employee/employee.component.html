@@ -1,0 +1,60 @@
+<div *ngIf="!loading" class="mt-4">
+    <div class="row">
+        <div class="col-md-3 offset-md-9"><button class="btn btn-primary" (click)="openCentrado(contenido)">Create
+                Employee</button></div>
+    </div>
+</div>
+<div *ngIf="!loading" class="mt-5">
+    <table class="table">
+        <caption>List of Employees</caption>
+        <thead>
+            <tr>
+                <th scope="col">Name</th>
+                <th scope="col">Last Name</th>
+                <th scope="col">Occupation</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr *ngFor="let employee of employees">
+                <td>{{employee.name}}</td>
+                <td>{{employee.lastName}}</td>
+                <td>{{employee.occupation}}</td>
+            </tr>
+        </tbody>
+    </table>
+</div>
+<div *ngIf="loading" class="spinner-border text-primary mx-auto" role="status"></div>
+
+<ng-template #contenido let-modal>
+    <div class="modal-header">
+        <h4 class="modal-title">Create Employee</h4>
+        <button class="close" aria-label="close" type="button" (click)="modal.dismiss()">
+            <span aria-hidden="true">&times;</span>
+        </button>
+    </div>
+    <div class="modal-body">
+        <form formGroup="employeeGroup">
+            <div class="form-group">
+                <label for="formGroupExampleInput">Name</label>
+                <input type="text" class="form-control" [(ngModel)]="name">
+            </div>
+            <div class="form-group">
+                <label for="formGroupExampleInput2">Last Name</label>
+                <input type="text" class="form-control" [(ngModel)]="lastName">
+            </div>
+            <div class="form-group">
+                <label for="formGroupExampleInput2">Occupation</label>
+                <input type="text" class="form-control" [(ngModel)]="occupation">
+            </div>
+        </form>
+    </div>
+    <div class="modal-footer">
+        <button *ngIf="!success" type="button" class="btn btn-light" (click)="modal.close()">CANCEL</button>
+        <button *ngIf="!success" type="button" class="btn btn-success" (click)="saveEmployee()">SAVE</button>
+        <div *ngIf="success" class="spinner-border text-primary" role="status"></div>
+    </div>
+    <div *ngIf="error && !success" class="alert alert-danger" role="alert">
+        {{message}}
+      </div>
+</ng-template>
+
