@@ -1,0 +1,145 @@
+<div *ngIf="!loading" class="mt-4">
+    <div class="row">
+        <div class="col-md-3 offset-md-9"><button class="btn btn-primary" (click)="openModal(content)">Create
+                Policy</button></div>
+    </div>
+</div>
+<div *ngIf="!loading" class="mt-5">
+    <table class="table">
+        <caption>List of Policies</caption>
+        <thead>
+            <tr>
+                <th scope="col">SKU</th>
+                <th scope="col">Article Name</th>
+                <th scope="col">Employee</th>
+                <th scope="col">Quantity</th>
+                <th scope="col">Options</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr *ngFor="let policy of policies">
+                <td>{{policy.policy.idPolicy}}</td>
+                <td>{{policy.articleDetail.name}}</td>
+                <td>{{policy.employee.name + ' ' + policy.employee.lastName}}</td>
+                <td>{{policy.policy.quantity}}</td>
+                <td>
+                    <button type="button" class="btn btn-info"
+                        (click)="openEditPolicyModal(contentPolicy, policy.policy.idPolicy)">Edit</button>
+                    <button type="button" class="btn btn-danger"
+                        (click)="openDeletePolicyModal(contentDelete,  policy.policy.idPolicy)">Delete</button>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+</div>
+<div *ngIf="loading" class="spinner-border text-primary mx-auto" role="status"></div>
+
+
+<ng-template #content let-modal>
+    <div class="modal-header">
+        <h4 class="modal-title">Create Policy</h4>
+        <button class="close" aria-label="close" type="button" (click)="modal.dismiss()">
+            <span aria-hidden="true">&times;</span>
+        </button>
+    </div>
+    <div class="modal-body">
+        <form formGroup="employeeGroup">
+            <div class="input-group">
+                <div class="input-group-prepend">
+                    <label class="input-group-text" for="inputGroupSelect01">Employee</label>
+                </div>
+                <select class="custom-select" id="inputGroupSelect01" [(ngModel)]="idEmployee">
+                    <option selected>Choose...</option>
+                    <option *ngFor="let employee of employees" value="{{employee.idEmployee}}">{{employee.name + ' ' +
+                        employee.lastName}}</option>
+                </select>
+            </div>
+            <div class="input-group">
+                <div class="input-group-prepend">
+                    <label class="input-group-text" for="inputGroupSelect02">Article</label>
+                </div>
+                <select class="custom-select" id="inputGroupSelect02" [(ngModel)]="sku">
+                    <option selected>Choose...</option>
+                    <option *ngFor="let inventory of inventories" value="{{inventory.sku}}">{{inventory.name}}</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label for="formGroupExampleInput2">Quantity</label>
+                <input type="text" [(ngModel)]="quantity" class="form-control">
+            </div>
+        </form>
+    </div>
+    <div class="modal-footer">
+        <button *ngIf="!success" type="button" class="btn btn-light" (click)="modal.close()">CANCEL</button>
+        <button *ngIf="!success" type="button" class="btn btn-success" (click)="savePolicy()">SAVE</button>
+        <div *ngIf="success" class="spinner-border text-primary" role="status"></div>
+    </div>
+    <div *ngIf="error && !success" class="alert alert-danger" role="alert">
+        {{message}}
+    </div>
+</ng-template>
+
+<ng-template #contentPolicy let-modal>
+    <div class="modal-header">
+        <h4 class="modal-title">Update Policy</h4>
+        <button class="close" aria-label="close" type="button" (click)="modal.dismiss()">
+            <span aria-hidden="true">&times;</span>
+        </button>
+    </div>
+    <div class="modal-body">
+
+        <div class="card mb-3" *ngIf="policyResponse != null">
+            <div class="card-body">
+                <h5 class="card-title">Police Info</h5>
+                <p class="card-text">Article: {{policyResponse.data.articleDetail.name}}</p>
+                <p class="card-text">Employee: {{policyResponse.data.employee.name + ' ' +
+                    policyResponse.data.employee.lastName}}</p>
+                <p class="card-text">Quantity: {{policyResponse.data.policy.quantity}}</p>
+            </div>
+        </div>
+
+        <p class="card-text">If you want to update this policy, change the values of it.</p>
+        <form formGroup="employeeGroup" *ngIf="policyResponse != null">
+            <div class="form-group">
+                <label for="formGroupExampleInput2">Employee name:</label>
+                <input type="text" [(ngModel)]="employeeName" value="{{policyResponse.data.employee.name}}" class="form-control">
+            </div>
+            <div class="form-group">
+                <label for="formGroupExampleInput2">Employee Last name:</label>
+                <input type="text" [(ngModel)]="employeeLastName" value="{{policyResponse.data.employee.lastName}}" class="form-control">
+            </div>
+            <div class="form-group">
+                <label for="formGroupExampleInput2">Inventory name:</label>
+                <input type="text" [(ngModel)]="inventoryName" value="{{policyResponse.data.articleDetail.name}}" class="form-control">
+            </div>
+        </form>
+    </div>
+    <div class="modal-footer">
+        <button *ngIf="!success" type="button" class="btn btn-light" (click)="modal.close()">CANCEL</button>
+        <button *ngIf="!success" type="button" class="btn btn-success" (click)="updatePolicy()">UPDATE</button>
+        <div *ngIf="success" class="spinner-border text-primary" role="status"></div>
+    </div>
+    <div *ngIf="error && !success" class="alert alert-danger" role="alert">
+        {{message}}
+    </div>
+</ng-template>
+
+<ng-template #contentDelete let-modal>
+    <div class="modal-header">
+        <h4 class="modal-title">Delete Policy</h4>
+        <button class="close" aria-label="close" type="button" (click)="modal.dismiss()">
+            <span aria-hidden="true">&times;</span>
+        </button>
+    </div>
+    <div class="modal-body">
+        <h6>Are you sure to want delete this policy?</h6>
+    </div>
+    <div class="modal-footer">
+        <button *ngIf="!success" type="button" class="btn btn-light" (click)="modal.close()">CANCEL</button>
+        <button *ngIf="!success" type="button" class="btn btn-success" (click)="deletePolicy()">DELETE</button>
+        <div *ngIf="success" class="spinner-border text-primary" role="status"></div>
+    </div>
+    <div *ngIf="error && !success" class="alert alert-danger" role="alert">
+        {{message}}
+    </div>
+</ng-template>
